@@ -26,6 +26,21 @@ void init_regs(){
 	}
 }
 
+
+/**
+ * Print out all of the contents that are inside of the registers.
+ */
+void print_regs(){
+  int col_size = 0;
+  for(int i = 0; i < 8; i++){
+    printf("X%2i:%.*lld ", i, col_size, (long long int) r[i]);
+    printf("X%2i:%.*lld ", i+8, col_size, (long long int) r[i+8]);
+    printf("X%2i:%.*lld ", i+16, col_size, (long long int) r[i+16]);
+    printf("X%2i:%.*lld ", i+24, col_size, (long long int) r[i+24]);
+  }
+}
+
+
 int string_compare(char str1[], char str2[]){
   int ctr = 0;
   while(str1[ctr] == str2[ctr]){
@@ -139,14 +154,14 @@ void write_read_demo(){
 int main(){
   // Do not write any code between init_regs
   init_regs(); // DO NOT REMOVE THIS LINE
-	
+
   // Below is a sample program to a write-read. Overwrite this with your own code.
   write_read_demo();
 	
   //TOKENIZER CALLS
-  printf("----------------------------------------------------------------------\n");
-  printf("Hello, this program only takes in instructions with spaces. Not commas.\n");
-  printf("----------------------------------------------------------------------\n");
+  printf("---------------------------------------------------------------------------\n");
+  printf("--Hello, this program only takes in instructions with spaces. Not commas.--\n");
+  printf("---------------------------------------------------------------------------\n");
  
   char user_input[INPUT_LIM]; 
   //will ask for user input until they enter ctrl+D
@@ -159,7 +174,7 @@ int main(){
     char *str = user_input;
 
     //----------------CHECK IF CONTROL D PRESSED -------------------
-    if (str[0] == EOF){ //FOR NOW EOF = /n
+    if (str[0] == '#'){ //FOR NOW EOF = /n
       break;
     }
     //--------------------------------------------------------------
@@ -169,6 +184,10 @@ int main(){
       printf("--->Sorry. This was not executed correctly.\n");
     }
   }
+  printf("------------------------\n");
+  printf("-- Printing registers: -- \n");
+  printf("------------------------\n");
+  print_regs();
   printf("\n");  
 
   return 0;
