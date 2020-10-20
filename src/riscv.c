@@ -48,55 +48,63 @@ bool interpret(char* instr){
   char **token = tokenize(instr); //tokenizes the string
   //created an array containing the first POSSIBLE words
   char *first[] = {"LW", "LD", "SW", "SD", "ADD", "ADDI", "SLLI", "SRLI", "AND", "OR", "XOR"};
-
   int check_instr;
-  char *instruction[1];
-  char *regSel[1];
+  char *instru[1];
+  char *firstReg[1];
   char *secReg;
  
   int size_first = sizeof first / sizeof *first;
-  
-  for(int i = 0; i < size_first; i++){
+
+  //-------------------TAKING CARE OF FINDING THE INSTRUCTION----------------------------
+  for(int i = 0; i < size_first; i++){ //will iterate through the list and check if it exists
     check_instr = string_compare(token[0], first[i]);
-    if(check_instr == 0){ //if true it equals 0
-      instruction[0] = first[i];
-    
+    if(check_instr == 0){ //if found, it equals 0
+      instru[0] = first[i];
       break;
     }
   }
   if(check_instr == 0){
-    printf("INSTRUCTION: %s \n", instruction[0]);
+    printf("-INSTRUCTION: %s \n", instru[0]);
   }
-  else
-    printf("did not find it");
+  else{
+    return false;
+  }
+  //-------------------THE FIRST REGISTER WILL BE THE SECOND TOKEN----------------------
+  
+  firstReg[0] = token[1];
+  printf("-DEST REGISTER: %s \n", firstReg[0]);
 
-  regSel[0] = token[1];
-  printf("FIRST REGISTER: %s \n", regSel[0]);
-
-  //------------
-  if(instruction[0] == "LW" || instruction[0] == "LD" || instruction[0] == "SW" || instruction[0] =="SD"){
-    secReg = strtok(token[2], "(");
-    char *saveFirst = secReg;
-    char *inPar;
+  //------------------CHECKING IF INSTR = LW or LD or SW or SW -------------------------
+  if(instru[0] == "LW" || instru[0] == "LD" || instru[0] == "SW" || instru[0] =="SD"){
+    secReg = strtok(token[2], "("); //still not tokenized
+    char *imm = secReg; //the immediate of the second register
+    char *secondReg; //actual second register
     
     while(secReg != NULL){
-      inPar = secReg;
+      secondReg = secReg;
       secReg = strtok(NULL, "(");
     }
     
-    printf("IMMEDIATE: %s\n", saveFirst);
-    printf("SECOND REGISTER: %s\n", inPar);
-  } //-----------
-
-  char *thirdReg[1];
-  if(instruction[0] == "ADD"){
-    thirdReg[0] = token[2];
-    printf("THIRD REGISTER: %s\n", thirdReg[0]);
+    printf("-IMMEDIATE FOR SECOND REGISTER: %s\n", imm);
+    printf("-SECOND REGISTER: %s\n", secondReg);
+  } 
+  //--------CHECKING IF INSTRUCTION IS   "ADD"  or  "AND"  or   "OR"  or   "XOR"----------------
+  char *secondRegExtra[1];
+  char *thirdRegExtra[1];
+  if(instru[0] == "ADD" || instru[0] == "AND" || instru[0] == "OR" || instru[0] == "XOR"){
+    secondRegExtra[0] = token[2];
+    printf("-SECOND REGISTER: %s\n", secondRegExtra[0]);
+    thirdRegExtra[0] = token[3];
+    printf("-THIRD REGISTER: %s\n", thirdRegExtra[0]);
   }
-  char *third_imm[1];
-  if(instruction[0]=="ADDI"||instruction[0]=="SLLI"||instruction[0]=="SRLI"){
-    third_imm[0] = token[2];
-    printf("IMMEDIATE: %s\n", third_imm[0]);
+  //-------------------CHECKING IF INSTRUCTION IS   "ADDI"   or   "SLLI"   or   "SRLI" -----------
+  char *immediates[1];
+  char *secondRegImm[1];
+  if(instru[0] == "ADDI" || instru[0]== "SLLI" || instru[0]=="SRLI"){
+    secondRegImm[0] = token[2];
+    immediates[0] = token[3];
+    printf("-SECOND REGISTER %s\n", secondRegImm[0]);
+    printf("-IMMEDIATE: %s\n", immediates[0]);
   }
   
   return true;
@@ -136,23 +144,31 @@ int main(){
   write_read_demo();
 	
   //TOKENIZER CALLS
+  printf("----------------------------------------------------------------------\n");
+  printf("Hello, this program only takes in instructions with spaces. Not commas.\n");
+  printf("----------------------------------------------------------------------\n");
+ 
   char user_input[INPUT_LIM]; 
-  printf("$ ");
-  //will ask for user input until
+  //will ask for user input until they enter ctrl+D
   init_regs(); //DO NOT REMOVE THIS LINE
  
   while(1){
+    printf("--->Enter an instruction or use ctrl+D on windows to exit the program\n");
+    printf("$ ");
     fgets(user_input,INPUT_LIM,stdin); //get user input
     char *str = user_input;
-    if (str == '/n'){ //FOR NOW EOF = /n
+
+    //----------------CHECK IF CONTROL D PRESSED -------------------
+    if (str[0] == EOF){ //FOR NOW EOF = /n
       break;
     }
+    //--------------------------------------------------------------
+    
     bool correctlyExec =  interpret(str); //calls interpret function from riscv.c file
+    if (correctlyExec == 0){ //if not executed correctly
+      printf("--->Sorry. This was not executed correctly.\n");
+    }
   }
-  
-  //char **token = tokenize(str);  
-  //print_tokens(token); 
-  //free_tokens(token); 
   printf("\n");  
 
   return 0;
