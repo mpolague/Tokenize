@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 #include <stdlib.h> // malloc & free
 #include <stdint.h> // use guaranteed 64-bit integers
 #include "tokenizer.h" // Create header file and reference that
@@ -25,7 +26,18 @@ void init_regs(){
 	}
 }
 
-
+int string_compare(char str1[], char str2[]){
+  int ctr = 0;
+  while(str1[ctr] == str2[ctr]){
+    if(str1[ctr] == '\0' || str2[ctr] == '\0')
+      break;
+    ctr++;
+  }
+  if(str1[ctr] == '\0' && str2[ctr] == '\0')
+    return 0;
+  else
+    return -1;
+}
 
 /**
  * Fill out this function and use it to read interpret user input to execute RV64 instructions.
@@ -33,38 +45,59 @@ void init_regs(){
  * as a parameter to this function.
  */
 bool interpret(char* instr){
-  //tokenize then interpret
   char **token = tokenize(instr); //tokenizes the string
-  //created an array containing the first word
+  //created an array containing the first POSSIBLE words
   char *first[] = {"LW", "LD", "SW", "SD", "ADD", "ADDI", "SLLI", "SRLI", "AND", "OR", "XOR"};
-  //char *firstOfToken[] = *token[0];
-  print_tokens(token);
-  char *returnedS = copy_str(token[0], 2);
-  char *returnedS2 = copy_str(first[0], 2);
-  bool firstEq = true;
-  for(int ctr = 0; ctr < 3; ctr++){
-    if (returnedS[ctr] != returnedS2[ctr]){
-      firstEq = false;
+
+  int check_instr;
+  char *instruction[1];
+  char *regSel[1];
+  char *secReg;
+ 
+  int size_first = sizeof first / sizeof *first;
+  
+  for(int i = 0; i < size_first; i++){
+    check_instr = string_compare(token[0], first[i]);
+    if(check_instr == 0){ //if true it equals 0
+      instruction[0] = first[i];
+    
+      break;
     }
   }
-  if(firstEq == 1){
-    printf("true");
-  }else{
-    printf("false");
+  if(check_instr == 0){
+    printf("INSTRUCTION: %s \n", instruction[0]);
   }
-  
-  //bool checkEqual = true;
-  //for(int i = 0; i < 3; i++){
-  //  if(token[0][i] != 0){
-  //    if(token[i] != first[i]){
-  //	printf("Token[0][i] is %c and first[i] is %c", token[i], first[i]);
-  //	checkEqual = false;
-  //	break;
-  //   }      
-  //}
-  //}
-  //printf("IT ISSSS: %d", checkEqual);
- 
+  else
+    printf("did not find it");
+
+  regSel[0] = token[1];
+  printf("FIRST REGISTER: %s \n", regSel[0]);
+
+  //------------
+  if(instruction[0] == "LW" || instruction[0] == "LD" || instruction[0] == "SW" || instruction[0] =="SD"){
+    secReg = strtok(token[2], "(");
+    char *saveFirst = secReg;
+    char *inPar;
+    
+    while(secReg != NULL){
+      inPar = secReg;
+      secReg = strtok(NULL, "(");
+    }
+    
+    printf("IMMEDIATE: %s\n", saveFirst);
+    printf("SECOND REGISTER: %s\n", inPar);
+  } //-----------
+
+  char *thirdReg[1];
+  if(instruction[0] == "ADD"){
+    thirdReg[0] = token[2];
+    printf("THIRD REGISTER: %s\n", thirdReg[0]);
+  }
+  char *third_imm[1];
+  if(instruction[0]=="ADDI"||instruction[0]=="SLLI"||instruction[0]=="SRLI"){
+    third_imm[0] = token[2];
+    printf("IMMEDIATE: %s\n", third_imm[0]);
+  }
   
   return true;
 }
