@@ -36,13 +36,23 @@ bool interpret(char* instr){
   //tokenize then interpret
   char **token = tokenize(instr); //tokenizes the string
   //created an array containing the first word
-  char *first[11] = {"LW", "LD", "SW", "SD", "ADD", "ADDI", "SLLI", "SRLI", "AND", "OR", "XOR"};
-  for(int i = 0; i < 11; i++){
-    if (token[0] == first[i]){
-      printf("Found it!");
-    }
-    printf("Did not find it!");
-  }
+  char *first[] = {"LW", "LD", "SW", "SD", "ADD", "ADDI", "SLLI", "SRLI", "AND", "OR", "XOR"};
+  //char *firstOfToken[] = *token[0];
+  print_tokens(token);
+  
+  //bool checkEqual = true;
+  //for(int i = 0; i < 3; i++){
+  //  if(token[0][i] != 0){
+  //    if(token[i] != first[i]){
+  //	printf("Token[0][i] is %c and first[i] is %c", token[i], first[i]);
+  //	checkEqual = false;
+  //	break;
+  //   }      
+  //}
+  //}
+  printf("IT ISSSS: %d", checkEqual);
+ 
+  
   return true;
 }
 
@@ -84,7 +94,7 @@ int main(){
   printf("$ ");
   //will ask for user input until
   init_regs(); //DO NOT REMOVE THIS LINE
-  
+ 
   while(1){
     fgets(user_input,INPUT_LIM,stdin); //get user input
     char *str = user_input;
