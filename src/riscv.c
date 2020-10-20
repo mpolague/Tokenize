@@ -39,6 +39,19 @@ bool interpret(char* instr){
   char *first[] = {"LW", "LD", "SW", "SD", "ADD", "ADDI", "SLLI", "SRLI", "AND", "OR", "XOR"};
   //char *firstOfToken[] = *token[0];
   print_tokens(token);
+  char *returnedS = copy_str(token[0], 2);
+  char *returnedS2 = copy_str(first[0], 2);
+  bool firstEq = true;
+  for(int ctr = 0; ctr < 3; ctr++){
+    if (returnedS[ctr] != returnedS2[ctr]){
+      firstEq = false;
+    }
+  }
+  if(firstEq == 1){
+    printf("true");
+  }else{
+    printf("false");
+  }
   
   //bool checkEqual = true;
   //for(int i = 0; i < 3; i++){
@@ -50,7 +63,7 @@ bool interpret(char* instr){
   //   }      
   //}
   //}
-  printf("IT ISSSS: %d", checkEqual);
+  //printf("IT ISSSS: %d", checkEqual);
  
   
   return true;
