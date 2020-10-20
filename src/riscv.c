@@ -4,6 +4,7 @@
 #include <stdint.h> // use guaranteed 64-bit integers
 #include "tokenizer.h" // Create header file and reference that
 #include "memory.h" // built-in functions to read and write to a specific file
+#define INPUT_LIM 50 //limit on how many characters a user can input
 
 int64_t* r; // Array of 32 64-bit registers
 
@@ -19,8 +20,9 @@ void write_read_demo();
 void init_regs(){
 	int reg_amount = 32;
 	r = malloc(reg_amount * sizeof(int64_t)); // 32 * 8 bytes
-	for(int i = 0; i < 32; i++)
+	for(int i = 0; i < 32; i++){
 		r[i] = 0;
+	}
 }
 
 
@@ -31,7 +33,17 @@ void init_regs(){
  * as a parameter to this function.
  */
 bool interpret(char* instr){
-	return true;
+  //tokenize then interpret
+  char **token = tokenize(instr); //tokenizes the string
+  //created an array containing the first word
+  char *first[11] = {"LW", "LD", "SW", "SD", "ADD", "ADDI", "SLLI", "SRLI", "AND", "OR", "XOR"};
+  for(int i = 0; i < 11; i++){
+    if (token[0] == first[i]){
+      printf("Found it!");
+    }
+    printf("Did not find it!");
+  }
+  return true;
 }
 
 
@@ -61,11 +73,31 @@ void write_read_demo(){
  * 
  */
 int main(){
-	// Do not write any code between init_regs
-	init_regs(); // DO NOT REMOVE THIS LINE
+  // Do not write any code between init_regs
+  init_regs(); // DO NOT REMOVE THIS LINE
 	
-	// Below is a sample program to a write-read. Overwrite this with your own code.
-	write_read_demo();
+  // Below is a sample program to a write-read. Overwrite this with your own code.
+  write_read_demo();
 	
-	return 0;
+  //TOKENIZER CALLS
+  char user_input[INPUT_LIM]; 
+  printf("$ ");
+  //will ask for user input until
+  init_regs(); //DO NOT REMOVE THIS LINE
+  
+  while(1){
+    fgets(user_input,INPUT_LIM,stdin); //get user input
+    char *str = user_input;
+    if (str == '/n'){ //FOR NOW EOF = /n
+      break;
+    }
+    bool correctlyExec =  interpret(str); //calls interpret function from riscv.c file
+  }
+  
+  //char **token = tokenize(str);  
+  //print_tokens(token); 
+  //free_tokens(token); 
+  printf("\n");  
+
+  return 0;
 }
