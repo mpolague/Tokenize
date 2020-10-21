@@ -69,7 +69,7 @@ bool interpret(char* instr){
   char *firstReg[1];
   char *secReg;
  
-  int size_first = sizeof first / sizeof *first;
+  int size_first = sizeof first / sizeof *first; //size of of array of first
 
   //-------------------TAKING CARE OF FINDING THE INSTRUCTION----------------------------
   for(int i = 0; i < size_first; i++){ //will iterate through the list and check if it exists
@@ -88,7 +88,14 @@ bool interpret(char* instr){
   //-------------------THE FIRST REGISTER WILL BE THE SECOND TOKEN----------------------
   
   firstReg[0] = token[1];
-  printf("-DEST REGISTER: %s \n", firstReg[0]);
+  printf("->DEST REGISTER: %s \n", firstReg[0]);
+  char *xOut = strtok(firstReg[0], "X"); //still not tokenized
+  int64_t test = read_address(20, "mem.txt");
+  int xOut2 = atoi(xOut); //converts string to int
+  r[xOut2] = read_address(0x00, "mem.txt"); //taking whatever value
+  printf("--->This is what is in r[0x00] is : %ld \n", r[xOut2]);
+  //int64_t write = write_address(r[xOut2], 0x20, "mem.txt");
+  
 
   //------------------CHECKING IF INSTR = LW or LD or SW or SW -------------------------
   if(instru[0] == "LW" || instru[0] == "LD" || instru[0] == "SW" || instru[0] =="SD"){
@@ -101,12 +108,19 @@ bool interpret(char* instr){
       secReg = strtok(NULL, "(");
     }
     
-    printf("-IMMEDIATE FOR SECOND REGISTER: %s\n", imm);
-    printf("-SECOND REGISTER: %s\n", secondReg);
+    printf("->IMMEDIATE FOR SECOND REGISTER: %s\n", imm);
+    printf("->SECOND REGISTER: %s\n", secondReg);
   } 
   //--------CHECKING IF INSTRUCTION IS   "ADD"  or  "AND"  or   "OR"  or   "XOR"----------------
   char *secondRegExtra[1];
   char *thirdRegExtra[1];
+  char *xOut3 = strtok(secondRegExtra[0], "X"); //still not tokenized
+  int64_t test2 = read_address(20, "mem.txt");
+  int xOut4 = atoi(xOut3); //converts string to int
+  r[xOut4] = read_address(0x08, "mem.txt"); //taking whatever value
+  printf("--->This is what is in r[0x08] is : %ld \n", r[xOut4]);
+  //int64_t write = write_address(r[xOut2], 0x20, "mem.txt");
+  
   if(instru[0] == "ADD" || instru[0] == "AND" || instru[0] == "OR" || instru[0] == "XOR"){
     secondRegExtra[0] = token[2];
     printf("-SECOND REGISTER: %s\n", secondRegExtra[0]);
@@ -170,8 +184,15 @@ int main(){
   //char* fileName = "mem.txt";
   //write_read_demo(data, address, fileName);
   
+  //----THIS IS HOW YOU GET THE ADDRESSES OF THE REGISTER ARRAY AND ITS ELEMENTS----
+  //printf("------\n");
+  //r[0] = 3;
+  //printf("ZERO %ld \n",r[0]);
+  //printf("second %ld \n", r[1]);
+  //printf("------");
+  
   while(1){
-    printf("--->Enter an instruction or use ctrl+D on windows to exit the program\n");
+    printf("->Enter an instruction or use ctrl+D on windows to exit the program\n");
     printf("$ ");
     fgets(user_input,INPUT_LIM,stdin); //get user input
     char *str = user_input;
