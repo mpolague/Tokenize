@@ -80,7 +80,7 @@ bool interpret(char* instr){
     }
   }
   if(check_instr == 0){
-    printf("-INSTRUCTION: %s \n", instru[0]);
+    printf("-> INSTRUCTION: %s \n", instru[0]);
   }
   else{
     return false;
@@ -88,11 +88,11 @@ bool interpret(char* instr){
   //-------------------THE FIRST REGISTER WILL BE THE SECOND TOKEN----------------------
   
   firstReg[0] = token[1];
-  printf("->DEST REGISTER: %s \n", firstReg[0]);
+  printf("-> DEST REGISTER: %s \n", firstReg[0]);
   char *xOut = strtok(firstReg[0], "X"); //still not tokenized
   int xOut2 = atoi(xOut); //converts string to int
   r[xOut2] = read_address(0x00, "mem.txt"); //taking whatever value
-  printf("------>This is what is in r[0x00] is : %ld \n", r[xOut2]);
+  printf("------> This is what is in r[0x00] is : %ld \n", r[xOut2]);
   
   //------------------CHECKING IF INSTR = LW or LD or SW or SW -------------------------
   if(instru[0] == "LW" || instru[0] == "LD" || instru[0] == "SW" || instru[0] =="SD"){
@@ -105,8 +105,8 @@ bool interpret(char* instr){
       secReg = strtok(NULL, "(");
     }
     
-    printf("->IMMEDIATE FOR SECOND REGISTER: %s\n", imm);
-    printf("->SECOND REGISTER: %s\n", secondReg);
+    printf("-> IMMEDIATE FOR SECOND REGISTER: %s\n", imm);
+    printf("-> SECOND REGISTER: %s\n", secondReg);
   } 
   //--------CHECKING IF INSTRUCTION IS   "ADD"  or  "AND"  or   "OR"  or   "XOR"----------------
   char *secondRegExtra[1];
@@ -114,19 +114,35 @@ bool interpret(char* instr){
   
   if(instru[0] == "ADD" || instru[0] == "AND" || instru[0] == "OR" || instru[0] == "XOR"){
     secondRegExtra[0] = token[2];
-    printf("->SECOND REGISTER: %s\n", secondRegExtra[0]);
+    printf("-> SECOND REGISTER: %s\n", secondRegExtra[0]);
     char *xOut3 = strtok(secondRegExtra[0], "X"); //still not tokenized
     int xOut4 = atoi(xOut3); //converts string to int
     r[xOut4] = read_address(0x08, "mem.txt"); //taking whatever value
-    printf("------>This is what is in r[0x08] is : %ld \n", r[xOut4]);
+    printf("------> This is what is in r[0x08] is : %ld \n", r[xOut4]);
    
     thirdRegExtra[0] = token[3];
-    printf("->THIRD REGISTER: %s\n", thirdRegExtra[0]);
-    char *xOut6 = strtok(thirdRegExtra[0], "X"); //still not tokenized
+    printf("-> THIRD REGISTER: %s\n", thirdRegExtra[0]);
+    char *xOut6;
+    xOut6 = strtok(thirdRegExtra[0], "X"); //still not tokenized
     int xOut7 = atoi(xOut6); //converts string to int
     r[xOut7] = read_address(0x10, "mem.txt"); //taking whatever value
-    printf("------>This is what is in r[0x10] is : %ld \n", r[xOut7]);
+    printf("------> This is what is in r[0x10] is : %ld \n", r[xOut7]);
+    
+    if(instru[0] == "ADD"){
+      r[xOut2] = r[xOut4] + r[xOut7]; //ADD INSTRUCTION
+    }
+    if(instru[0] == "AND"){ //AND INSTRUCTION
+      r[xOut2] = r[xOut4] & r[xOut7]; 
+    }
+    if(instru[0] == "OR"){ //OR INSTRUCTION
+      r[xOut2] = r[xOut4] | r[xOut7];; 
+    }
+    if(instru[0] == "XOR"){ //XOR INSTRUCTION
+      r[xOut2] = r[xOut4] ^ r[xOut7];; 
+    }
 
+    printf("-----------------> %s was replaced with : %ld \n", firstReg[0], r[xOut2]);
+    printf("\n");
   }
   //-------------------CHECKING IF INSTRUCTION IS   "ADDI"   or   "SLLI"   or   "SRLI" -----------
   char *immediates[1];
@@ -149,8 +165,6 @@ bool interpret(char* instr){
  * Use 0x before an int in C to hardcode it as text, but you may enter base 10 as you see fit.
  */
 void write_read_demo(int64_t data_to_write, int64_t address, char* mem_file){
-	
-	
 	// Write 4095 (or "0000000 00000FFF") in the 20th address (address 152 == 0x98)
 	int64_t write = write_address(data_to_write, address, mem_file);
 	if(write == (int64_t) NULL)
@@ -193,7 +207,7 @@ int main(){
   //printf("------");
   
   while(1){
-    printf("->Enter an instruction or use ctrl+D on windows to exit the program\n");
+    printf("-> Enter an instruction or use ctrl+D on windows to exit the program\n");
     printf("$ ");
     fgets(user_input,INPUT_LIM,stdin); //get user input
     char *str = user_input;
@@ -206,7 +220,7 @@ int main(){
     
     bool correctlyExec =  interpret(str); //calls interpret function from riscv.c file
     if (correctlyExec == 0){ //if not executed correctly
-      printf("--->Sorry. This was not executed correctly.\n");
+      printf("---> Sorry. This was not executed correctly.\n");
     }
   }
   printf("------------------------\n");
