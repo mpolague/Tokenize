@@ -38,6 +38,7 @@ void print_regs(){
     printf("X%2i:%.*lld ", i+16, col_size, (long long int) r[i+16]);
     printf("X%2i:%.*lld ", i+24, col_size, (long long int) r[i+24]);
   }
+  printf("\n");
 }
 
 
@@ -132,10 +133,8 @@ bool interpret(char* instr){
  * Feel free to change "data_to_write" and "address" variables to see how these affect mem.txt
  * Use 0x before an int in C to hardcode it as text, but you may enter base 10 as you see fit.
  */
-void write_read_demo(){
-	int64_t data_to_write = 0xFFF; // equal to 4095
-	int64_t address = 0x98; // equal to 152
-	char* mem_file = "mem.txt";
+void write_read_demo(int64_t data_to_write, int64_t address, char* mem_file){
+	
 	
 	// Write 4095 (or "0000000 00000FFF") in the 20th address (address 152 == 0x98)
 	int64_t write = write_address(data_to_write, address, mem_file);
@@ -156,7 +155,6 @@ int main(){
   init_regs(); // DO NOT REMOVE THIS LINE
 
   // Below is a sample program to a write-read. Overwrite this with your own code.
-  write_read_demo();
 	
   //TOKENIZER CALLS
   printf("---------------------------------------------------------------------------\n");
@@ -166,7 +164,12 @@ int main(){
   char user_input[INPUT_LIM]; 
   //will ask for user input until they enter ctrl+D
   init_regs(); //DO NOT REMOVE THIS LINE
- 
+  //----THIS IS HOW WE ACCESS DATA FROM THE MEM.TXT AND OVERWRITE IT AS WELL----
+  //int64_t data = 0xFFF;
+  //int64_t address = 0x20;
+  //char* fileName = "mem.txt";
+  //write_read_demo(data, address, fileName);
+  
   while(1){
     printf("--->Enter an instruction or use ctrl+D on windows to exit the program\n");
     printf("$ ");
