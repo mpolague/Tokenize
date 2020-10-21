@@ -90,13 +90,10 @@ bool interpret(char* instr){
   firstReg[0] = token[1];
   printf("->DEST REGISTER: %s \n", firstReg[0]);
   char *xOut = strtok(firstReg[0], "X"); //still not tokenized
-  int64_t test = read_address(20, "mem.txt");
   int xOut2 = atoi(xOut); //converts string to int
   r[xOut2] = read_address(0x00, "mem.txt"); //taking whatever value
-  printf("--->This is what is in r[0x00] is : %ld \n", r[xOut2]);
-  //int64_t write = write_address(r[xOut2], 0x20, "mem.txt");
+  printf("------>This is what is in r[0x00] is : %ld \n", r[xOut2]);
   
-
   //------------------CHECKING IF INSTR = LW or LD or SW or SW -------------------------
   if(instru[0] == "LW" || instru[0] == "LD" || instru[0] == "SW" || instru[0] =="SD"){
     secReg = strtok(token[2], "("); //still not tokenized
@@ -114,18 +111,22 @@ bool interpret(char* instr){
   //--------CHECKING IF INSTRUCTION IS   "ADD"  or  "AND"  or   "OR"  or   "XOR"----------------
   char *secondRegExtra[1];
   char *thirdRegExtra[1];
-  char *xOut3 = strtok(secondRegExtra[0], "X"); //still not tokenized
-  int64_t test2 = read_address(20, "mem.txt");
-  int xOut4 = atoi(xOut3); //converts string to int
-  r[xOut4] = read_address(0x08, "mem.txt"); //taking whatever value
-  printf("--->This is what is in r[0x08] is : %ld \n", r[xOut4]);
-  //int64_t write = write_address(r[xOut2], 0x20, "mem.txt");
   
   if(instru[0] == "ADD" || instru[0] == "AND" || instru[0] == "OR" || instru[0] == "XOR"){
     secondRegExtra[0] = token[2];
-    printf("-SECOND REGISTER: %s\n", secondRegExtra[0]);
+    printf("->SECOND REGISTER: %s\n", secondRegExtra[0]);
+    char *xOut3 = strtok(secondRegExtra[0], "X"); //still not tokenized
+    int xOut4 = atoi(xOut3); //converts string to int
+    r[xOut4] = read_address(0x08, "mem.txt"); //taking whatever value
+    printf("------>This is what is in r[0x08] is : %ld \n", r[xOut4]);
+   
     thirdRegExtra[0] = token[3];
-    printf("-THIRD REGISTER: %s\n", thirdRegExtra[0]);
+    printf("->THIRD REGISTER: %s\n", thirdRegExtra[0]);
+    char *xOut6 = strtok(thirdRegExtra[0], "X"); //still not tokenized
+    int xOut7 = atoi(xOut6); //converts string to int
+    r[xOut7] = read_address(0x10, "mem.txt"); //taking whatever value
+    printf("------>This is what is in r[0x10] is : %ld \n", r[xOut7]);
+
   }
   //-------------------CHECKING IF INSTRUCTION IS   "ADDI"   or   "SLLI"   or   "SRLI" -----------
   char *immediates[1];
